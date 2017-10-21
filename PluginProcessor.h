@@ -16,12 +16,13 @@
 //==============================================================================
 /**
 */
-class Waylomiditrans1_0AudioProcessor  : public AudioProcessor
+class Waylovst5AudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    Waylomiditrans1_0AudioProcessor();
-    ~Waylomiditrans1_0AudioProcessor();
+    Waylovst5AudioProcessor();
+    ~Waylovst5AudioProcessor();
+    
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -48,6 +49,7 @@ public:
     //==============================================================================
     int getNumPrograms() override;
     int getCurrentProgram() override;
+    
     void setCurrentProgram (int index) override;
     const String getProgramName (int index) override;
     void changeProgramName (int index, const String& newName) override;
@@ -58,5 +60,5 @@ public:
 
 private:
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Waylomiditrans1_0AudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Waylovst5AudioProcessor)
 };

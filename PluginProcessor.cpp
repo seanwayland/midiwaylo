@@ -13,7 +13,7 @@
 
 
 //==============================================================================
-Waylomiditrans1_0AudioProcessor::Waylomiditrans1_0AudioProcessor()
+Waylovst5AudioProcessor::Waylovst5AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -27,17 +27,19 @@ Waylomiditrans1_0AudioProcessor::Waylomiditrans1_0AudioProcessor()
 {
 }
 
-Waylomiditrans1_0AudioProcessor::~Waylomiditrans1_0AudioProcessor()
+Waylovst5AudioProcessor::~Waylovst5AudioProcessor()
 {
 }
 
+int waylotrans = 0;
+int playing[127];
 //==============================================================================
-const String Waylomiditrans1_0AudioProcessor::getName() const
+const String Waylovst5AudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool Waylomiditrans1_0AudioProcessor::acceptsMidi() const
+bool Waylovst5AudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -46,7 +48,7 @@ bool Waylomiditrans1_0AudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool Waylomiditrans1_0AudioProcessor::producesMidi() const
+bool Waylovst5AudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -55,7 +57,7 @@ bool Waylomiditrans1_0AudioProcessor::producesMidi() const
    #endif
 }
 
-bool Waylomiditrans1_0AudioProcessor::isMidiEffect() const
+bool Waylovst5AudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -64,50 +66,50 @@ bool Waylomiditrans1_0AudioProcessor::isMidiEffect() const
    #endif
 }
 
-double Waylomiditrans1_0AudioProcessor::getTailLengthSeconds() const
+double Waylovst5AudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int Waylomiditrans1_0AudioProcessor::getNumPrograms()
+int Waylovst5AudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int Waylomiditrans1_0AudioProcessor::getCurrentProgram()
+int Waylovst5AudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void Waylomiditrans1_0AudioProcessor::setCurrentProgram (int index)
+void Waylovst5AudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const String Waylomiditrans1_0AudioProcessor::getProgramName (int index)
+const String Waylovst5AudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void Waylomiditrans1_0AudioProcessor::changeProgramName (int index, const String& newName)
+void Waylovst5AudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
 
 //==============================================================================
-void Waylomiditrans1_0AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void Waylovst5AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
 
-void Waylomiditrans1_0AudioProcessor::releaseResources()
+void Waylovst5AudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool Waylomiditrans1_0AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool Waylovst5AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     ignoreUnused (layouts);
@@ -130,7 +132,7 @@ bool Waylomiditrans1_0AudioProcessor::isBusesLayoutSupported (const BusesLayout&
 }
 #endif
 
-void Waylomiditrans1_0AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
+void Waylovst5AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
     ScopedNoDenormals noDenormals;
     const int totalNumInputChannels  = getTotalNumInputChannels();
@@ -142,8 +144,92 @@ void Waylomiditrans1_0AudioProcessor::processBlock (AudioSampleBuffer& buffer, M
     // This is here to avoid people getting screaming feedback
     // when they first compile a plugin, but obviously you don't need to keep
     // this code if your algorithm always overwrites all the output channels.
-    for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+    //for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    //    buffer.clear (i, 0, buffer.getNumSamples());
+    //MidiBuffer processedMidi; // our processed MIDI output
+    //int time; // the timestamp of the current MIDI message in the for loop
+    MidiMessage m; // the current MIDI message in the for loop
+    //int NoteNumberWaylo ;
+    
+    /* iterate through the input buffer, process our MIDI, add it to the output buffer
+    for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
+    {
+        
+        if (m.isNoteOn())
+        {
+            m = MidiMessage::noteOn(m.getChannel(), m.getNoteNumber()+1, m.getVelocity());
+        }
+        processedMidi.addEvent (m, time);
+        if (m.isNoteOff())
+        {
+            m = MidiMessage::noteOn(m.getChannel(), m.getNoteNumber()+1, m.getVelocity());
+        }
+        processedMidi.addEvent (m, time);
+        
+    }
+    */
+    {
+        buffer.clear();
+        
+        
+        MidiBuffer processedMidi;
+        int time;
+        MidiMessage m;
+        
+        for (MidiBuffer::Iterator i (midiMessages); i.getNextEvent (m, time);)
+        {
+            if (m.isNoteOn() && m.getNoteNumber() < 60 )
+            
+                
+                {
+                    waylotrans = m.getNoteNumber() - 48;
+                    m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
+                    
+                }
+             
+            
+            else if (m.isNoteOff() && m.getNoteNumber() < 60)
+            
+                
+                {
+                    waylotrans = 0;
+                    m = MidiMessage::noteOff(m.getChannel(), m.getNoteNumber(), m.getVelocity());
+                }
+                
+            else if (m.isNoteOn() && m.getNoteNumber() >= 60)
+                    
+                {
+                    int NewNote = m.getNoteNumber() + waylotrans -12;
+                    playing[m.getNoteNumber()]= NewNote;
+                    m = MidiMessage::noteOn(m.getChannel(), NewNote , m.getVelocity());
+                    
+                }
+            else if (m.isNoteOff() && m.getNoteNumber() >= 60)
+                
+            {
+                int NewNote = playing[m.getNoteNumber()];
+                 playing[m.getNoteNumber()] = NULL;
+                m = MidiMessage::noteOff(m.getChannel(), NewNote , m.getVelocity());
+                
+            }
+            
+            
+            else if (m.isAftertouch())
+            {
+            }
+            else if (m.isPitchWheel())
+            {
+            }
+            
+            processedMidi.addEvent (m, time);
+        }
+        
+        midiMessages.swapWith (processedMidi);
+    }
+    
+    // replace the outgoing MIDI buffer with our processed MIDI buffer
+    //midiMessages.swapWith (processedMidi);
+    
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
@@ -156,25 +242,25 @@ void Waylomiditrans1_0AudioProcessor::processBlock (AudioSampleBuffer& buffer, M
 }
 
 //==============================================================================
-bool Waylomiditrans1_0AudioProcessor::hasEditor() const
+bool Waylovst5AudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* Waylomiditrans1_0AudioProcessor::createEditor()
+AudioProcessorEditor* Waylovst5AudioProcessor::createEditor()
 {
-    return new Waylomiditrans1_0AudioProcessorEditor (*this);
+    return new Waylovst5AudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void Waylomiditrans1_0AudioProcessor::getStateInformation (MemoryBlock& destData)
+void Waylovst5AudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void Waylomiditrans1_0AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void Waylovst5AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -184,5 +270,5 @@ void Waylomiditrans1_0AudioProcessor::setStateInformation (const void* data, int
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new Waylomiditrans1_0AudioProcessor();
+    return new Waylovst5AudioProcessor();
 }

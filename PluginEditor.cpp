@@ -13,7 +13,7 @@
 
 
 //==============================================================================
-Waylomiditrans1_0AudioProcessorEditor::Waylomiditrans1_0AudioProcessorEditor (Waylomiditrans1_0AudioProcessor& p)
+Waylovst5AudioProcessorEditor::Waylovst5AudioProcessorEditor (Waylovst5AudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
     // Make sure that before the constructor has finished, you've set the
@@ -21,22 +21,24 @@ Waylomiditrans1_0AudioProcessorEditor::Waylomiditrans1_0AudioProcessorEditor (Wa
     setSize (400, 300);
 }
 
-Waylomiditrans1_0AudioProcessorEditor::~Waylomiditrans1_0AudioProcessorEditor()
+Waylovst5AudioProcessorEditor::~Waylovst5AudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void Waylomiditrans1_0AudioProcessorEditor::paint (Graphics& g)
+void Waylovst5AudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
     g.setColour (Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
+    Image background = ImageCache::getFromMemory (BinaryData::waylologo3_png, BinaryData::waylologo3_pngSize);
+    g.drawImageAt (background, 0, 0);
+    
 }
 
-void Waylomiditrans1_0AudioProcessorEditor::resized()
+void Waylovst5AudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
